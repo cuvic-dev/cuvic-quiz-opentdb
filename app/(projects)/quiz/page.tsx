@@ -21,8 +21,10 @@ export default function QuizPage() {
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [selected, setSelected] = useState<Record<number, string>>({});
+  const [score, setScore] = useState<number | null>(null);
 
   const loadQuiz = useCallback(async () => {
+    setScore(null);
     setSelected({});
 
     try {
@@ -53,6 +55,14 @@ export default function QuizPage() {
   const chooseAnswer = (index: number, answer: string) => {
     if (selected[index]) return;
     setSelected((prev) => ({ ...prev, [index]: answer }));
+  };
+
+  const calculateScore = () => {
+    const s = questions.reduce(
+      (acc, q, i) => (selected[i] === q.correct_answer ? acc + 1 : acc),
+      0
+    );
+    setScore(s);
   };
 
   return (
@@ -109,6 +119,19 @@ export default function QuizPage() {
         );
       })}
 
+      <div className="pt-4">
+        {score === null ? (
+          <Button onClick={calculateScore} className="w-full text-lg py-3">
+            Submit Quiz
+          </Button>
+        ) : (
+          <div className="space-y-4">
+            <h2 className="text-2xl font-semibold">
+              Score: {score} / {questions.length}
+            </h2>
+          </div>
+        )}
+      </div>
     </main>
   );
 }
