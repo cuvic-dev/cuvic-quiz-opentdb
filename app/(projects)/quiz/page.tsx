@@ -51,7 +51,7 @@ export default function QuizPage() {
       }));
 
       setQuestions(processed);
-      
+
     } catch (err) {
       console.error("Failed loading quiz:", err);
     }
@@ -86,8 +86,8 @@ export default function QuizPage() {
 
   if (loading) {
     return (
-      <main className="p-6">
-        <h1 className="text-2xl font-semibold">Loading Quiz...</h1>
+      <main className="p-6 flex justify-center items-center min-h-[60vh]">
+        <h1 className="text-3xl font-semibold animate-pulse">Loading Quiz…</h1>
       </main>
     );
   }
@@ -95,13 +95,13 @@ export default function QuizPage() {
   if (score !== null) {
     return (
       <main className="p-6 max-w-xl mx-auto space-y-6 text-center">
-        <h1 className="text-3xl font-bold">Quiz Complete!</h1>
-        <p className="text-2xl font-semibold">
+        <h1 className="text-4xl font-bold">🎉 Quiz Complete!</h1>
+        <p className="text-3xl font-semibold">
           Score: {score} / {questions.length}
         </p>
 
-        <Button onClick={loadQuiz} className="w-full text-lg py-3">
-          Load New Quiz
+        <Button onClick={loadQuiz} className="w-full text-lg py-4 mt-4">
+          Take Another Quiz
         </Button>
       </main>
     );
@@ -121,24 +121,29 @@ export default function QuizPage() {
   const answers = q.shuffled_answers ?? [];
 
   return (
-    <main className="p-6 max-w-3xl mx-auto space-y-6">
-      <h1 className="text-3xl font-bold">OpenTDB Quiz</h1>
+    <main className="p-6 max-w-3xl mx-auto space-y-8">
+      <div className="flex justify-between items-center">
+        <h1 className="text-4xl font-bold">OpenTDB Quiz</h1>
+        <p className="text-lg text-muted-foreground">
+          Question <span className="font-semibold">{currentIndex + 1}</span> / {questions.length}
+        </p>
+      </div>
 
-      <Card className="rounded-xl">
+      <Card className="rounded-2xl shadow-md border border-accent/20">
         <CardHeader>
-          <CardTitle className="text-xl">
-            {currentIndex + 1}. {decodeHtml(q.question)}
+          <CardTitle className="text-2xl leading-relaxed">
+            {decodeHtml(q.question)}
           </CardTitle>
 
-          <div className="flex gap-2 mt-2">
+          <div className="flex gap-2 mt-3">
             <Badge variant="outline">{q.category}</Badge>
-            <Badge variant="secondary" className="capitalize">
+            <Badge variant="secondary" className="capitalize px-3 py-1">
               {q.difficulty}
             </Badge>
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-2">
+        <CardContent className="space-y-3 mt-3">
           {answers.map((ans) => {
             const correct = q.correct_answer;
 
@@ -152,10 +157,11 @@ export default function QuizPage() {
                 disabled={!!selectedAns}
                 variant="outline"
                 className={[
-                  "w-full justify-start text-left transition",
-                  isCorrect && "bg-green-200 hover:bg-green-200",
-                  isWrong && "bg-red-200 hover:bg-red-200",
-                  !isCorrect && !isWrong && "bg-muted",
+                  "w-full text-left px-4 py-4 text-lg rounded-xl transition-all",
+                  "hover:bg-accent/40",
+                  isCorrect && "bg-green-300/70 border-green-600 text-black",
+                  isWrong && "bg-red-300/70 border-red-600 text-black",
+                  !isCorrect && !isWrong && "bg-muted"
                 ]
                   .filter(Boolean)
                   .join(" ")}
@@ -170,8 +176,7 @@ export default function QuizPage() {
       {selectedAns && (
         <Button
           onClick={nextQuestion}
-          className="w-full text-lg py-3 mt-4"
-          variant="default"
+          className="w-full text-lg py-4 rounded-xl mt-2"
         >
           {currentIndex === questions.length - 1
             ? "Finish Quiz"
