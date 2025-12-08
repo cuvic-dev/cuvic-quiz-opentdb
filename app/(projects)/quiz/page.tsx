@@ -94,95 +94,105 @@ export default function QuizPage() {
 
   if (score !== null) {
     return (
-      <main className="p-6 max-w-xl mx-auto space-y-6 text-center">
-        <h1 className="text-4xl font-bold">🎉 Quiz Complete!</h1>
-        <p className="text-3xl font-semibold">
-          Score: {score} / {questions.length}
-        </p>
+      <div className="h-screen w-screen flex justify-center items-center">
+        <main className="max-w-xl mx-auto space-y-6 text-center px-6">
+          <h1 className="text-4xl font-bold">🎉 Quiz Complete!</h1>
+          <p className="text-3xl font-semibold">
+            Score: {score} / {questions.length}
+          </p>
 
-        <Button onClick={loadQuiz} className="w-full text-lg py-4 mt-4">
-          Take Another Quiz
-        </Button>
-      </main>
+          <Button onClick={loadQuiz} className="w-full text-lg py-4 mt-4">
+            Take Another Quiz
+          </Button>
+        </main>
+      </div>
     );
   }
+
 
   if (!questions.length && !loading) {
     return (
-      <main className="p-6 max-w-xl mx-auto">
-        <h1 className="text-2xl font-bold">No quiz questions available.</h1>
-        <Button onClick={loadQuiz} className="mt-4">Try Again</Button>
-      </main>
+      <div className="h-screen w-screen flex justify-center items-center">
+        <main className="max-w-xl mx-auto text-center px-6">
+          <h1 className="text-2xl font-bold">No quiz questions available.</h1>
+          <Button onClick={loadQuiz} className="mt-4">
+            Try Again
+          </Button>
+        </main>
+      </div>
     );
   }
+
 
   const q = questions[currentIndex];
   const selectedAns = selected[currentIndex];
   const answers = q.shuffled_answers ?? [];
 
   return (
-    <main className="p-6 max-w-3xl mx-auto space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-4xl font-bold">OpenTDB Quiz</h1>
-        <p className="text-lg text-muted-foreground">
-          Question <span className="font-semibold">{currentIndex + 1}</span> / {questions.length}
-        </p>
-      </div>
+    <div className="min-h-screen flex justify-center items-center">
+      <main className="p-6 max-w-3xl mx-auto space-y-8 w-full">
+        <div className="flex justify-between items-center">
+          <h1 className="text-4xl font-bold">OpenTDB Quiz</h1>
+          <p className="text-lg text-muted-foreground">
+            Question <span className="font-semibold">{currentIndex + 1}</span> / {questions.length}
+          </p>
+        </div>
 
-      <Card className="rounded-2xl shadow-md border border-accent/20">
-        <CardHeader>
-          <CardTitle className="text-2xl leading-relaxed">
-            {decodeHtml(q.question)}
-          </CardTitle>
+        <Card className="rounded-2xl shadow-md border border-accent/20">
+          <CardHeader>
+            <CardTitle className="text-2xl leading-relaxed">
+              {decodeHtml(q.question)}
+            </CardTitle>
 
-          <div className="flex gap-2 mt-3">
-            <Badge variant="outline">{q.category}</Badge>
-            <Badge variant="secondary" className="capitalize px-3 py-1">
-              {q.difficulty}
-            </Badge>
-          </div>
-        </CardHeader>
+            <div className="flex gap-2 mt-3">
+              <Badge variant="outline">{q.category}</Badge>
+              <Badge variant="secondary" className="capitalize px-3 py-1">
+                {q.difficulty}
+              </Badge>
+            </div>
+          </CardHeader>
 
-        <CardContent className="space-y-3 mt-3">
-          {answers.map((ans) => {
-            const correct = q.correct_answer;
+          <CardContent className="space-y-3 mt-3">
+            {answers.map((ans) => {
+              const correct = q.correct_answer;
 
-            const isCorrect = selectedAns && ans === correct;
-            const isWrong = selectedAns === ans && ans !== correct;
+              const isCorrect = selectedAns && ans === correct;
+              const isWrong = selectedAns === ans && ans !== correct;
 
-            return (
-              <Button
-                key={ans}
-                onClick={() => chooseAnswer(currentIndex, ans)}
-                disabled={!!selectedAns}
-                variant="outline"
-                className={[
-                  "w-full text-left px-4 py-4 text-lg rounded-xl transition-all",
-                  "hover:bg-accent/40",
-                  isCorrect && "bg-green-300/70 border-green-600 text-black",
-                  isWrong && "bg-red-300/70 border-red-600 text-black",
-                  !isCorrect && !isWrong && "bg-muted"
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                {decodeHtml(ans)}
-              </Button>
-            );
-          })}
-        </CardContent>
-      </Card>
+              return (
+                <Button
+                  key={ans}
+                  onClick={() => chooseAnswer(currentIndex, ans)}
+                  disabled={!!selectedAns}
+                  variant="outline"
+                  className={[
+                    "w-full text-left px-4 py-4 text-lg rounded-xl transition-all",
+                    "hover:bg-accent/40",
+                    isCorrect && "bg-green-300/70 border-green-600 text-black",
+                    isWrong && "bg-red-300/70 border-red-600 text-black",
+                    !isCorrect && !isWrong && "bg-muted"
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  {decodeHtml(ans)}
+                </Button>
+              );
+            })}
+          </CardContent>
+        </Card>
 
-      {selectedAns && (
-        <Button
-          onClick={nextQuestion}
-          className="w-full text-lg py-4 rounded-xl mt-2"
-        >
+        {selectedAns && (
+          <Button
+            onClick={nextQuestion}
+            className="w-full text-lg py-4 rounded-xl mt-2"
+          >
           {currentIndex === questions.length - 1
             ? "Finish Quiz"
             : "Next Question"}
-        </Button>
-      )}
-    </main>
+          </Button>
+        )}
+      </main>
+    </div>
   );
 }
