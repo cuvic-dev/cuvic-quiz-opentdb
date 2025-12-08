@@ -20,10 +20,12 @@ type Question = {
 export default function QuizPage() {
 
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Record<number, string>>({});
   const [score, setScore] = useState<number | null>(null);
 
   const loadQuiz = useCallback(async () => {
+    setLoading(true);
     setScore(null);
     setSelected({});
 
@@ -46,6 +48,7 @@ export default function QuizPage() {
       console.error("Failed loading quiz:", err);
     }
 
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -64,6 +67,14 @@ export default function QuizPage() {
     );
     setScore(s);
   };
+
+  if (loading) {
+    return (
+      <main className="p-6">
+        <h1 className="text-2xl font-semibold">Loading Quiz...</h1>
+      </main>
+    );
+  }
 
   return (
     <main className="p-6 max-w-3xl mx-auto space-y-6">
