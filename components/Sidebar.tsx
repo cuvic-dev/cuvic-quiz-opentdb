@@ -4,6 +4,8 @@ import { Menu, Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import Link from "next/link";
 
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -55,5 +57,30 @@ const Sidebar = () => {
     </aside>
   );
 };
+
+const SidebarItem = ({
+  icon,
+  label,
+  href,
+  collapsed
+}: {
+  icon?: React.ReactNode;
+  label: string;
+  href?: string;
+  collapsed: boolean;
+}) => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Link
+        href={href || "#"}
+        className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700 cursor-pointer transition-all"
+      >
+        {icon}
+        {!collapsed && <span>{label}</span>}
+      </Link>
+    </TooltipTrigger>
+    {collapsed && <TooltipContent>{label}</TooltipContent>}
+  </Tooltip>
+);
 
 export default Sidebar;
