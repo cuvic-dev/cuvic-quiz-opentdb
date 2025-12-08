@@ -182,16 +182,19 @@ export default function QuizPage() {
           </CardContent>
         </Card>
 
-        {selectedAns && (
-          <Button
-            onClick={nextQuestion}
-            className="w-full text-lg py-4 rounded-xl mt-2"
-          >
-          {currentIndex === questions.length - 1
-            ? "Finish Quiz"
-            : "Next Question"}
-          </Button>
-        )}
+        <div className="min-h-[4.5rem] mt-2 flex items-center">
+          {selectedAns ? (
+            <Button
+              onClick={nextQuestion}
+              className="w-full text-lg py-4 rounded-xl"
+            >
+              {currentIndex === questions.length - 1
+                ? "Finish Quiz"
+                : "Next Question"}
+            </Button>
+          ) : null}
+        </div>
+
       </main>
     </div>
   );
