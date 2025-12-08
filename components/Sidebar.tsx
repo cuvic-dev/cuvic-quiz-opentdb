@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, Search } from "lucide-react";
+import { Menu, Search, Form } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -53,7 +53,14 @@ const Sidebar = () => {
         </div>
       )}
 
-      <nav className="flex flex-col gap-2 mt-4"></nav>
+      <nav className="flex flex-col gap-2 mt-4">
+        <SidebarItem
+          icon={<Form />}
+          label="Quiz"
+          href="/quiz"
+          collapsed={collapsed}
+        />
+      </nav>
     </aside>
   );
 };
