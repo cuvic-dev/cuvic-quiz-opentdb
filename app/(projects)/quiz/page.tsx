@@ -2,6 +2,10 @@
 
 import { useEffect, useState, useCallback } from "react";
 
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+
 type Question = {
   type: string;
   difficulty: string;
@@ -44,8 +48,43 @@ export default function QuizPage() {
   }, [loadQuiz]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <h1 className="text-2xl font-medium">Quiz Page</h1>
-    </div>
+    <main className="p-6 max-w-3xl mx-auto space-y-6">
+      <h1 className="text-3xl font-bold">OpenTDB Quiz</h1>
+
+      {questions.map((q, idx) => {
+        const answers = q.shuffled_answers ?? [];
+
+        return (
+          <Card key={idx} className="rounded-xl">
+            <CardHeader>
+              <CardTitle className="text-xl">
+                {idx + 1}. {q.question}
+              </CardTitle>
+
+              <div className="flex gap-2 mt-2">
+                <Badge variant="outline">{q.category}</Badge>
+                <Badge variant="secondary" className="capitalize">
+                  {q.difficulty}
+                </Badge>
+              </div>
+            </CardHeader>
+
+            <CardContent className="space-y-2">
+              {answers.map((ans) => {
+                return (
+                  <Button
+                    key={ans}
+                    variant="outline"
+                  >
+                    {(ans)}
+                  </Button>
+                );
+              })}
+            </CardContent>
+          </Card>
+        );
+      })}
+
+    </main>
   );
 }
