@@ -5,6 +5,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { decodeHtml } from "@/lib/utils";
 
 type Question = {
   type: string;
@@ -58,7 +59,7 @@ export default function QuizPage() {
           <Card key={idx} className="rounded-xl">
             <CardHeader>
               <CardTitle className="text-xl">
-                {idx + 1}. {q.question}
+                {idx + 1}. {decodeHtml(q.question)}
               </CardTitle>
 
               <div className="flex gap-2 mt-2">
@@ -76,7 +77,7 @@ export default function QuizPage() {
                     key={ans}
                     variant="outline"
                   >
-                    {(ans)}
+                    {decodeHtml(ans)}
                   </Button>
                 );
               })}
