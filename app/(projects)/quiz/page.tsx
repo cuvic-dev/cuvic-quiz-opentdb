@@ -129,6 +129,13 @@ export default function QuizPage() {
             <h2 className="text-2xl font-semibold">
               Score: {score} / {questions.length}
             </h2>
+            <Button
+              onClick={loadQuiz}
+              className="w-full text-lg py-3"
+              variant="secondary"
+            >
+              Load New Quiz
+            </Button>
           </div>
         )}
       </div>
