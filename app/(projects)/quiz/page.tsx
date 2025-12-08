@@ -37,6 +37,12 @@ export default function QuizPage() {
       );
       const data = await res.json();
 
+      if (!data?.results || !Array.isArray(data.results) || data.results.length === 0) {
+        setQuestions([]);
+        setLoading(false);
+        return;
+      }
+
       const processed: Question[] = data.results.map((q: Question) => ({
         ...q,
         shuffled_answers: [...q.incorrect_answers, q.correct_answer].sort(
@@ -97,6 +103,15 @@ export default function QuizPage() {
         <Button onClick={loadQuiz} className="w-full text-lg py-3">
           Load New Quiz
         </Button>
+      </main>
+    );
+  }
+
+  if (!questions.length && !loading) {
+    return (
+      <main className="p-6 max-w-xl mx-auto">
+        <h1 className="text-2xl font-bold">No quiz questions available.</h1>
+        <Button onClick={loadQuiz} className="mt-4">Try Again</Button>
       </main>
     );
   }
