@@ -5,6 +5,8 @@ import { useEffect, useState, useCallback } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+
 import { decodeHtml } from "@/lib/utils";
 
 type Question = {
@@ -25,6 +27,10 @@ export default function QuizPage() {
   const [score, setScore] = useState<number | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [difficulty, setDifficulty] = useState("easy");
+  const [amount, setAmount] = useState(10);
+
   const loadQuiz = useCallback(async () => {
     setLoading(true);
     setScore(null);
@@ -33,7 +39,7 @@ export default function QuizPage() {
 
     try {
       const res = await fetch(
-        "https://opentdb.com/api.php?amount=10&difficulty=easy&type=multiple"
+        `https://opentdb.com/api.php?amount=${amount}&difficulty=${difficulty}&type=multiple`
       );
       const data = await res.json();
 
@@ -57,11 +63,12 @@ export default function QuizPage() {
     }
 
     setLoading(false);
-  }, []);
+  }, [difficulty, amount]);
 
-  useEffect(() => {
-    loadQuiz();
-  }, [loadQuiz]);
+  const startQuiz = async () => {
+    setQuizStarted(true);
+    await loadQuiz();
+  };
 
   const chooseAnswer = (index: number, answer: string) => {
     if (selected[index]) return;
@@ -84,6 +91,46 @@ export default function QuizPage() {
     setScore(s);
   };
 
+  if (!quizStarted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Card className="max-w-md w-full p-6 space-y-5 rounded-2xl shadow-lg">
+          <CardTitle className="text-3xl font-bold text-center">Start Quiz</CardTitle>
+
+          <div className="space-y-3">
+            <label className="font-medium">Difficulty</label>
+            <div className="grid grid-cols-3 gap-2">
+              {["easy", "medium", "hard"].map((d) => (
+                <Button
+                  key={d}
+                  variant={difficulty === d ? "default" : "outline"}
+                  onClick={() => setDifficulty(d)}
+                  className="capitalize py-2"
+                >
+                  {d}
+                </Button>
+              ))}
+            </div>
+
+            <label className="font-medium mt-4">Number of Questions</label>
+            <Input
+              type="number"
+              min={1}
+              max={20}
+              value={amount}
+              onChange={(e) => setAmount(Number(e.target.value))}
+              className="text-lg"
+            />
+          </div>
+
+          <Button className="w-full py-4 text-lg" onClick={startQuiz}>
+            Start Quiz
+          </Button>
+        </Card>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <main className="p-6 flex justify-center items-center min-h-[60vh]">
@@ -101,8 +148,15 @@ export default function QuizPage() {
             Score: {score} / {questions.length}
           </p>
 
-          <Button onClick={loadQuiz} className="w-full text-lg py-4 mt-4">
-            Take Another Quiz
+          <Button
+            onClick={() => {
+              setQuizStarted(false);
+              setScore(null);
+              setQuestions([]);
+            }}
+            className="w-full text-lg py-4 mt-4"
+          >
+            Start New Quiz
           </Button>
         </main>
       </div>
@@ -123,7 +177,7 @@ export default function QuizPage() {
     );
   }
 
-
+  
   const q = questions[currentIndex];
   const selectedAns = selected[currentIndex];
   const answers = q.shuffled_answers ?? [];
