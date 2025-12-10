@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 
 import { decodeHtml } from "@/lib/utils";
 
@@ -201,6 +202,11 @@ export default function QuizPage() {
             Question <span className="font-bold">{currentIndex + 1}</span> / {questions.length}
           </p>
         </div>
+
+        <Progress
+          value={((currentIndex + 1) / questions.length) * 100}
+          className="h-3 bg-white/10 [&>div]:bg-blue-600 [&>div]:shadow-[0_0_12px_#2563eb]"
+        />
 
         <Card className="rounded-2xl shadow-xl border border-white/10 bg-white/10 backdrop-blur-lg text-white">
           <CardHeader>
